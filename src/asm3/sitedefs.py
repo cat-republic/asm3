@@ -8,7 +8,7 @@ copy it from scripts/asm3.conf.example
 """
 
 # Provides site-wide definitions, reading them from a configuration file
-import codecs, os, sys, json
+import os, json
 from urllib.parse import urlparse
 
 def get_string(k, dv = ""):
