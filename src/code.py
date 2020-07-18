@@ -6014,4 +6014,11 @@ elif DEPLOYMENT_TYPE == "fcgi":
     web.runwsgi = web.runfcgi
 
 if __name__ == "__main__":
+    dbo = asm3.db.get_database()
+    if not dbo.has_structure():
+        dbo = asm3.db.get_database()
+        dbo.locale = 'en'
+        dbo.installpath = PATH
+        asm3.dbupdate.install(dbo)
+
     app.run()
