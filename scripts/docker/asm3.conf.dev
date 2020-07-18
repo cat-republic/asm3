@@ -26,12 +26,7 @@ log_location = stderr
 log_debug = true
 
 # Database info
-db_type = POSTGRESQL # MYSQL, POSTGRESQL, SQLITE or DB2
-db_host = postgres
-db_port = 5432
-db_username = asm3
-db_password = asm3
-db_name = asm
+database_url = postgresql://asm3:asm3@postgres:5432/asm # MYSQL, POSTGRESQL, SQLITE or DB2
 
 # If you want to maintain compatibility with an ASM2 client
 # accessing your database, setting this will have ASM3

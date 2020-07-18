@@ -9,47 +9,11 @@ copy it from scripts/asm3.conf.example
 
 # Provides site-wide definitions, reading them from a configuration file
 import codecs, os, sys, json
-
-# The map of values loaded from the config file
-cfg = None
-
-def read_config_file():
-    """
-    Load the config file into cfg map. Looks for the config file in
-    the following places in order:
-    1. ASM3_CONF environment variable
-    2. $INSTALL_DIR/asm3.conf
-    3. $HOME/.asm3.conf
-    4. /etc/asm3.conf
-    """
-    global cfg
-    fname = ""
-    insconf = os.path.dirname(os.path.abspath(__file__)) + os.sep + ".." + os.sep + "asm3.conf"
-    homeconf = os.path.expanduser("~") + os.sep + ".asm3.conf"
-    if "ASM3_CONF" in os.environ and os.environ["ASM3_CONF"] != "": fname = os.environ["ASM3_CONF"]
-    elif os.path.exists(insconf): fname = insconf
-    elif os.path.exists(homeconf): fname = homeconf
-    elif os.path.exists("/etc/asm3.conf"): fname = "/etc/asm3.conf"
-    if fname == "":
-        sys.stderr.write("no config found, using defaults\n")
-        cfg = {}
-    else:
-        sys.stderr.write("config: %s\n" % fname)
-        cfg = {}
-        with codecs.open(fname, 'r', encoding='utf8') as f:
-            lines = f.readlines()
-        for l in lines:
-            if l.find("#") != -1 and l.find("{") == -1: 
-                l = l[0:l.find("#")]
-            if l.find("=") != -1:
-                k, v = l.split("=", 1)
-                cfg[k.strip()] = v.strip()
+from urllib.parse import urlparse
+import os
 
 def get_string(k, dv = ""):
-    global cfg
-    if cfg is None: read_config_file()
-    if k not in cfg: return dv
-    return cfg[k]
+    return os.environ.get(k, None) or os.environ.get(k.upper(), dv)
 
 def get_boolean(k, dv = False):
     v = get_string(k)
@@ -86,20 +50,15 @@ TIMEZONE = get_integer("timezone", 0)
 # syslog  - the UNIX syslogger (to LOCAL3 facility)
 # ntevent - the Windows event logger
 # <file>  - The path to a file to log to
-LOG_LOCATION = get_string("log_location", "syslog")
+LOG_LOCATION = get_string("log_location", "stderr")
 
 # Include debug messages when logging - set to False
 # to disable debug messages
 LOG_DEBUG = get_boolean("log_debug", True)
 
 # Database info
-# MYSQL, POSTGRESQL, SQLITE or DB2
-DB_TYPE = get_string("db_type", "MYSQL")
-DB_HOST = get_string("db_host", "localhost")
-DB_PORT = get_integer("db_port", 3306)
-DB_USERNAME = get_string("db_username", "robin")
-DB_PASSWORD = get_string("db_password", "robin")
-DB_NAME = get_string("db_name", "asm")
+DATABASE_URL = get_string("database_url", None)
+DB_TYPE = urlparse(DATABASE_URL).scheme.upper()
 
 # If you want to maintain compatibility with an ASM2 client
 # accessing your database, setting this will have ASM3

@@ -26,12 +26,7 @@ log_location = syslog
 log_debug = true
 
 # Database info
-db_type = MYSQL # MYSQL, POSTGRESQL, SQLITE or DB2
-db_host = localhost
-db_port = 3306
-db_username = robin
-db_password = robin
-db_name = asm
+database_url = mysql://robin:robin@localhost:3306/asm # MYSQL, POSTGRESQL, SQLITE or DB2
 
 # If you want to maintain compatibility with an ASM2 client
 # accessing your database, setting this will have ASM3

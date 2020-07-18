@@ -1,6 +1,7 @@
 
 import asm3.al
 from .base import Database
+import os
 
 try:
     import psycopg2
@@ -18,7 +19,11 @@ class DatabasePostgreSQL(Database):
     type_float = "REAL"
     
     def connect(self):
-        c = psycopg2.connect(host=self.host, port=self.port, user=self.username, password=self.password, database=self.database)
+        # If on Heroku, use the provideddatabase URL
+        if os.environ.get('DATABASE_URL'):
+            c = psycopg2.connect(os.environ.get('DATABASE_URL'), sslmode='require')
+        else:
+            c = psycopg2.connect(host=self.host, port=self.port, user=self.username, password=self.password, database=self.database)
         c.set_client_encoding("UTF8")
         return c
 

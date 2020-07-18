@@ -9,8 +9,9 @@ import asm3.utils
 import datetime
 import sys
 import time
+from urllib.parse import urlparse
 
-from asm3.sitedefs import DB_TYPE, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HAS_ASM2_PK_TABLE, DB_DECODE_HTML_ENTITIES, DB_EXEC_LOG, DB_EXPLAIN_QUERIES, DB_TIME_QUERIES, DB_TIME_LOG_OVER, DB_TIMEOUT, CACHE_COMMON_QUERIES
+from asm3.sitedefs import DATABASE_URL, DB_HAS_ASM2_PK_TABLE, DB_DECODE_HTML_ENTITIES, DB_EXEC_LOG, DB_EXPLAIN_QUERIES, DB_TIME_QUERIES, DB_TIME_LOG_OVER, DB_TIMEOUT, CACHE_COMMON_QUERIES
 
 class ResultRow(dict):
     """
@@ -106,12 +107,16 @@ class Database(object):
     sitedefs.py supplies the default database connection info.
     This is the base class for all RDBMS provider specific functionality.
     """
-    dbtype = DB_TYPE 
-    host = DB_HOST
-    port = DB_PORT
-    username = DB_USERNAME
-    password = DB_PASSWORD
-    database = DB_NAME
+    database_url = DATABASE_URL
+    parsed = urlparse(database_url)
+
+    dbtype = parsed.scheme.upper()
+    host = parsed.hostname
+    port = parsed.port
+    username = parsed.username
+    password = parsed.password
+    # Instead of "/asm", we want simple "asm"
+    database = parsed.path.lstrip("/")
 
     alias = "" 
     locale = "en"

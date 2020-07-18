@@ -9,6 +9,7 @@ PATH = os.path.dirname(os.path.abspath(__file__)) + os.sep
 sys.path.append(PATH)
 
 import web
+from whitenoise import WhiteNoise
 
 import asm3.al
 import asm3.additional
@@ -5979,20 +5980,23 @@ class waitinglist_results(JSONEndpoint):
             asm3.waitinglist.update_waitinglist_highlight(o.dbo, wid, o.post["himode"])
 
 
+# TODO fix this, not sure why it's being problematic
+if __name__ == "__main__":
+    web.config.debug = False
 
 # List of routes constructed from class definitions
 routes = []
 
 # SSL for the server can be passed as an extra startup argument, eg:
 # python code.py 5000 ssl=true,cert=/etc/cert.crt,key=/etc/cert.key,chain=/etc/chain.crt
-if len(sys.argv) > 2:
-    from web.wsgiserver import CherryPyWSGIServer
-    for arg in sys.argv[2].split(","):
-        if arg.find("=") == -1: continue
-        k, v = arg.split("=")
-        if k == "cert": CherryPyWSGIServer.ssl_certificate = v
-        if k == "key": CherryPyWSGIServer.ssl_private_key = v
-        if k == "chain": CherryPyWSGIServer.ssl_certificate_chain = v
+# if len(sys.argv) > 2:
+#     from web.wsgiserver import CherryPyWSGIServer
+#     for arg in sys.argv[2].split(","):
+#         if arg.find("=") == -1: continue
+#         k, v = arg.split("=")
+#         if k == "cert": CherryPyWSGIServer.ssl_certificate = v
+#         if k == "key": CherryPyWSGIServer.ssl_private_key = v
+#         if k == "chain": CherryPyWSGIServer.ssl_certificate_chain = v
 
 # Setup the WSGI application object and session with mappings
 app = web.application(generate_routes(), globals())
@@ -6004,10 +6008,10 @@ session = session_manager()
 # Choose startup mode
 if DEPLOYMENT_TYPE == "wsgi":
     application = app.wsgifunc()
+    application = WhiteNoise(application, root='src/')
 elif DEPLOYMENT_TYPE == "fcgi":
     web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
     web.runwsgi = web.runfcgi
 
 if __name__ == "__main__":
     app.run()
-
