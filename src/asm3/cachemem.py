@@ -1,6 +1,7 @@
 
 import asm3.al
 import time
+import os
 
 def get(key):
     """
@@ -75,7 +76,6 @@ def _get_mc():
     Returns a memcache client
     """
     import bmemcached
-    import os
     servers = os.environ.get('MEMCACHIER_SERVERS', '').split(',')
     user = os.environ.get('MEMCACHIER_USERNAME', '')
     passw = os.environ.get('MEMCACHIER_PASSWORD', '')
