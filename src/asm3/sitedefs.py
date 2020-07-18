@@ -10,7 +10,6 @@ copy it from scripts/asm3.conf.example
 # Provides site-wide definitions, reading them from a configuration file
 import codecs, os, sys, json
 from urllib.parse import urlparse
-import os
 
 def get_string(k, dv = ""):
     return os.environ.get(k, None) or os.environ.get(k.upper(), dv)

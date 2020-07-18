@@ -14,6 +14,7 @@ gunicorn = "*"
 whitenoise = "*"
 psycopg2-binary = "*"
 python-binary-memcached = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.8"

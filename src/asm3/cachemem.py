@@ -102,7 +102,7 @@ def _memcache_put(key, value, ttl):
 def _memcache_increment(key):
     global memcache_client
     if memcache_client is None: memcache_client = _get_mc()
-    return memcache_client.incr(key)
+    return memcache_client.incr(key, memcache_client.get(key) or 0)
 
 def _memcache_delete(key):
     global memcache_client
