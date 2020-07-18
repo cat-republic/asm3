@@ -1,6 +1,4 @@
 
-from asm3.sitedefs import MEMCACHED_SERVER
-
 import asm3.al
 import time
 
@@ -76,12 +74,18 @@ def _get_mc():
     """
     Returns a memcache client
     """
-    import memcache
-    mc = memcache.Client([MEMCACHED_SERVER], debug=1) # causes any errors to be pumped out to stderr and picked up my mod_wsgi
+    import bmemcached
+    import os
+    servers = os.environ.get('MEMCACHIER_SERVERS', '').split(',')
+    user = os.environ.get('MEMCACHIER_USERNAME', '')
+    passw = os.environ.get('MEMCACHIER_PASSWORD', '')
+
+    mc = bmemcached.Client(servers, username=user, password=passw)
+    mc.enable_retry_delay(True)
     return mc
 
 def _memcache_available():
-    return MEMCACHED_SERVER != ""
+    return len(os.environ.get('MEMCACHIER_SERVERS', '')) > 3
 
 def _memcache_get(key):
     global memcache_client
