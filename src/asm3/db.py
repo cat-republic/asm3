@@ -15,7 +15,6 @@ def get_dbo(t = None):
         "SQLITE":       asm3.dbms.sqlite.DatabaseSQLite3,
         "DB2":          asm3.dbms.db2.DatabaseDB2
     }
-    m["POSTGRES"] = m["POSTGRESQL"]
     if t is None: t = DB_TYPE
     x = m[t]()
     x.dbtype = t

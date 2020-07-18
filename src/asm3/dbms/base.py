@@ -111,6 +111,8 @@ class Database(object):
     parsed = urlparse(database_url)
 
     dbtype = parsed.scheme.upper()
+    if dbtype == "POSTGRES":
+        dbtype = "POSTGRESQL"
     host = parsed.hostname
     port = parsed.port
     username = parsed.username

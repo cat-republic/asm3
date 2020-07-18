@@ -59,6 +59,8 @@ LOG_DEBUG = get_boolean("log_debug", True)
 # Database info
 DATABASE_URL = get_string("database_url", None)
 DB_TYPE = urlparse(DATABASE_URL).scheme.upper()
+if DB_TYPE == "POSTGRES":
+    DB_TYPE = "POSTGRESQL"
 
 # If you want to maintain compatibility with an ASM2 client
 # accessing your database, setting this will have ASM3
