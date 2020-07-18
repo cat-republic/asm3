@@ -6013,13 +6013,5 @@ elif DEPLOYMENT_TYPE == "fcgi":
     web.wsgi.runwsgi = lambda func, addr=None: web.wsgi.runfcgi(func, addr)
     web.runwsgi = web.runfcgi
 
-try:
-    dbo = asm3.db.get_database()
-    dbo.locale = 'en'
-    dbo.installpath = PATH
-    asm3.dbupdate.install(dbo)
-except:
-    pass
-
 if __name__ == "__main__":
     app.run()
